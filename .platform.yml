@@ -1,6 +1,9 @@
 # Stages this application wants run before its image is built.
+# `image` picks the runtime: the default sandbox carries the platform's own
+# tooling, not this app's dependencies.
 stages:
   - name: unit tests
-    run: python -c "import main; assert main.app.title == 'No-Dockerfile Demo'; print('unit tests passed')"
+    image: python:3.11-slim
+    run: pip install --no-cache-dir -q -r requirements.txt && python -c "import main; assert main.app.title == 'No-Dockerfile Demo'; print('unit tests passed')"
   - name: check requirements pinned
     run: test -s requirements.txt && echo "requirements present"
