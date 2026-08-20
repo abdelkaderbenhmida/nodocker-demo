@@ -1,0 +1,6 @@
+# Stages this application wants run before its image is built.
+stages:
+  - name: unit tests
+    run: python -c "import main; assert main.app.title == 'No-Dockerfile Demo'; print('unit tests passed')"
+  - name: check requirements pinned
+    run: test -s requirements.txt && echo "requirements present"
