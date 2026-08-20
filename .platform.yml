@@ -1,9 +1,7 @@
-# Stages this application wants run before its image is built.
-# `image` picks the runtime: the default sandbox carries the platform's own
-# tooling, not this app's dependencies.
 stages:
-  - name: unit tests
+  - name: unit tests with coverage
     image: python:3.11-slim
-    run: pip install --no-cache-dir -q -r requirements.txt && python -c "import main; assert main.app.title == 'No-Dockerfile Demo'; print('unit tests passed')"
-  - name: check requirements pinned
-    run: test -s requirements.txt && echo "requirements present"
+    run: pip install --no-cache-dir -q -r requirements.txt pytest pytest-cov && pytest -q --cov=. --cov-report=term-missing
+  - name: write build stamp
+    image: python:3.11-slim
+    run: date -u +%Y-%m-%dT%H:%M:%SZ > BUILD_STAMP && cat BUILD_STAMP
